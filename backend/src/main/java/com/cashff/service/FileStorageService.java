@@ -1,0 +1,8 @@
+package com.cashff.service;
+import org.springframework.beans.factory.annotation.Value; import org.springframework.http.MediaType; import org.springframework.stereotype.Service; import org.springframework.web.multipart.MultipartFile; import java.nio.file.*; import java.util.UUID;
+@Service public class FileStorageService {
+ private final Path uploadPath;
+ public FileStorageService(@Value("${app.upload-dir:./uploads}") String dir){uploadPath=Paths.get(dir).toAbsolutePath().normalize();try{Files.createDirectories(uploadPath);}catch(Exception e){throw new IllegalStateException(e);}}
+ public String storeImage(MultipartFile file){if(file==null||file.isEmpty())throw new IllegalArgumentException("Please choose an image.");String type=file.getContentType();if(type==null||!type.toLowerCase().startsWith("image/"))throw new IllegalArgumentException("Only image files are allowed.");if(file.getSize()>8L*1024*1024)throw new IllegalArgumentException("Images must be 8 MB or smaller.");String ext=".img";String name=file.getOriginalFilename();if(name!=null&&name.lastIndexOf('.')>=0){String candidate=name.substring(name.lastIndexOf('.')).toLowerCase();if(candidate.matches("\\.(png|jpe?g|webp|gif|bmp|svg)"))ext=candidate;}
+  String filename=UUID.randomUUID()+ext;try{Path target=uploadPath.resolve(filename).normalize();if(!target.startsWith(uploadPath))throw new IllegalArgumentException("Invalid file name");Files.copy(file.getInputStream(),target,StandardCopyOption.REPLACE_EXISTING);return "/uploads/"+filename;}catch(Exception e){throw new IllegalStateException("Could not save uploaded image",e);}}
+}

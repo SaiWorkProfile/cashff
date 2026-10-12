@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFF - Elite Gaming Esports & Donations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
+        
+        body { 
+            background: #020617; 
+            color: #f8fafc; 
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        /* RGB Animated Border & Glow Effect */
+        @keyframes rgbGlow {
+            0% { border-color: #ec4899; box-shadow: 0 0 20px rgba(236, 72, 153, 0.4), inset 0 0 10px rgba(236, 72, 153, 0.1); }
+            33% { border-color: #8b5cf6; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4), inset 0 0 10px rgba(139, 92, 246, 0.1); }
+            66% { border-color: #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.1); }
+            100% { border-color: #ec4899; box-shadow: 0 0 20px rgba(236, 72, 153, 0.4), inset 0 0 10px rgba(236, 72, 153, 0.1); }
+        }
+
+        .rgb-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(3, 7, 18, 0.98));
+            backdrop-filter: blur(16px);
+            border: 2px solid #ec4899;
+            animation: rgbGlow 6s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* RGB Flow Text Effect */
+        @keyframes rgbText {
+            0% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .rgb-title {
+            background: linear-gradient(to right, #ec4899, #8b5cf6, #06b6d4, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rgbText 8s linear infinite;
+        }
+
+        .gaming-btn {
+            background: linear-gradient(135deg, #9333ea 0%, #db2777 50%, #06b6d4 100%);
+            background-size: 200% auto;
+            box-shadow: 0 0 20px rgba(219, 39, 119, 0.5);
+            transition: 0.4s ease;
+        }
+        .gaming-btn:hover {
+            background-position: right center;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.8);
+            transform: scale(1.02);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #1e293b;
+            transition: .3s;
+            border-radius: 24px;
+            border: 1px solid rgba(236, 72, 153, 0.4);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background: linear-gradient(to right, #ec4899, #8b5cf6); }
+        input:checked + .slider:before { transform: translateX(20px); }
+    </style>
+</head>
+<body class="min-h-screen flex justify-center items-center p-0 sm:p-4">
+
+    <!-- Mobile Esport Frame -->
+    <div class="w-full max-w-md bg-slate-950 min-h-screen sm:min-h-[920px] sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border-2 border-purple-900/80 relative">
+        
+        <!-- Header -->
+        <header class="bg-slate-950/95 backdrop-blur-md px-5 py-4 border-b border-purple-500/40 flex justify-between items-center sticky top-0 z-50">
+            <div class="flex items-center space-x-3">
+                <button id="back-btn" onclick="goHome()" class="hidden text-pink-400 hover:text-white p-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h1 id="page-title" class="text-xl font-extrabold tracking-wider rgb-title">CASH FF ESPORTS</h1>
+            </div>
+            <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-full border border-purple-500/50">
+                <span class="text-[10px] text-purple-300 font-bold uppercase tracking-wider">ADMIN</span>
+                <input type="checkbox" id="admin-toggle" checked onchange="toggleAdminMode()" class="cursor-pointer accent-pink-500 w-4 h-4">
+            </div>
+        </header>
+
+        <!-- Main Body Content -->
+        <main id="main-content" class="flex-1 p-4 overflow-y-auto pb-24 space-y-4">
+            <!-- Dynamic UI Loads Here -->
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-950 border-t border-purple-900/40 py-3 px-4 text-center text-[11px] text-slate-400 tracking-widest uppercase">
+            🔥 Free Fire Custom & Redeem Platform &copy; 2026
+        </footer>
+    </div>
+
+    <!-- Notice / Rules Modal -->
+    <div id="notice-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex justify-center items-center p-4">
+        <div class="rgb-card p-5 rounded-2xl w-full max-w-sm space-y-3">
+            <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
+                <h3 class="text-sm font-bold text-amber-400 uppercase">📢 Notice & Rules</h3>
+                <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+                <div class="bg-slate-900/90 p-3 rounded-xl border border-purple-900/60 space-y-1.5">
+                    <p class="font-bold text-pink-400">⚠️ महत्वपूर्ण सूचना (Payment Policy):</p>
+                    <p>आप जो भी पेमेंट कर रहे हैं, वह पूरी तरह से आपकी अपनी इच्छा और समर्थन पर है।</p>
+                </div>
+                <div class="bg-slate-900/90 p-3 rounded-xl border border-purple-900/60 space-y-1.5">
+                    <p class="font-bold text-cyan-400">🕒 टॉप सपोर्टर्स टाइम स्लॉट नियम:</p>
+                    <p>तीनों टाइम स्लॉट (10:00 AM, 3:00 PM, 6:00 PM) के लिए ठीक उसके **30 मिनट पहले** का डेटा कैप्चर किया जाता है।</p>
+                </div>
+            </div>
+            <button onclick="closeNoticeModal()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider">समझ गया (Got It)</button>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Winner Photos (C Option) -->
+    <div id="photo-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex justify-center items-center p-4">
+        <div class="rgb-card p-5 rounded-2xl w-full max-w-sm space-y-4">
+            <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
+                <h3 class="text-sm font-bold text-pink-400 uppercase">🏆 Winner Screenshots (1st, 2nd, 3rd)</h3>
+                <button onclick="closePhotoModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div id="modal-photos-container" class="space-y-3 max-h-[70vh] overflow-y-auto"></div>
+            <button onclick="closePhotoModal()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Close</button>
+        </div>
+    </div>
+
+    <!-- Modal for Admin Uploading 3 Winner Photos -->
+    <div id="admin-photo-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex justify-center items-center p-4">
+        <div class="rgb-card p-5 rounded-2xl w-full max-w-sm space-y-3">
+            <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
+                <h3 class="text-sm font-bold text-amber-400 uppercase">📷 Upload 3 Winner Photos</h3>
+                <button onclick="closeAdminPhotoModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="space-y-2">
+                <label class="text-[10px] text-purple-300 block font-semibold">1st Place Photo:</label>
+                <input type="file" id="p1" accept="image/*" class="w-full text-xs text-slate-300 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white">
+                <label class="text-[10px] text-purple-300 block font-semibold">2nd Place Photo:</label>
+                <input type="file" id="p2" accept="image/*" class="w-full text-xs text-slate-300 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white">
+                <label class="text-[10px] text-purple-300 block font-semibold">3rd Place Photo:</label>
+                <input type="file" id="p3" accept="image/*" class="w-full text-xs text-slate-300 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white">
+            </div>
+            <button onclick="saveMatchPhotos()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider mt-2">Save & Publish 'C'</button>
+        </div>
+    </div>
+
+    <!-- Modal for Admin Editing Top 3 Donors -->
+    <div id="admin-donor-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex justify-center items-center p-4">
+        <div class="rgb-card p-5 rounded-2xl w-full max-w-md space-y-3 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
+                <h3 class="text-sm font-bold text-pink-400 uppercase">⭐ Edit Top Supporters (Time Slots)</h3>
+                <button onclick="closeDonorModal()" class="text-slate-400 hover:text-white font-bold text-lg">&times;</button>
+            </div>
+            <div class="space-y-1">
+                <label class="text-xs text-purple-300 font-bold block">Select Slot to Update:</label>
+                <select id="edit-slot-select" onchange="loadSlotDataToModal()" class="w-full bg-slate-900 border border-purple-900 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                    <option value="10:00 AM">10:00 AM Slot</option>
+                    <option value="3:00 PM">3:00 PM Slot</option>
+                    <option value="6:00 PM">6:00 PM Slot</option>
+                </select>
+            </div>
+            <div id="donor-inputs-container" class="space-y-3 pt-2"></div>
+            <button onclick="saveDonorsData()" class="gaming-btn w-full text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">Save Slot Donors</button>
+        </div>
+    </div>
+
+    <script>
+        let isAdmin = true;
+        let currentView = 'home';
+        let activeMatchIndex = null;
+        let activeDonorSlot = '10:00 AM';
+        let redeemNotifEnabled = true;
+        let customNotifEnabled = true;
+
+        let appData = {
+            redeemCodes: [
+                { code: "FFMC 2535 78MK 99AZ", time: "9:00 PM" }
+            ],
+            customMatches: [
+                { id: "12457", pass: "111", time: "7:00 PM", timer: 180, active: false, photos: [] }
+            ],
+            fourthSectionImage: null,
+            donorSlots: {
+                "10:00 AM": [
+                    { rank: "1st", name: "Rahul Gamer", amount: "₹500", type: "YouTube", link: "https://youtube.com" },
+                    { rank: "2nd", name: "Amit FF", amount: "₹300", type: "Instagram", link: "https://instagram.com" },
+                    { rank: "3rd", name: "Sahil Esports", amount: "₹150", type: "Telegram", link: "https://telegram.org" }
+                ],
+                "3:00 PM": [
+                    { rank: "1st", name: "Vicky King", amount: "₹800", type: "YouTube", link: "https://youtube.com" },
+                    { rank: "2nd", name: "Rohit FF", amount: "₹400", type: "Instagram", link: "https://instagram.com" },
+                    { rank: "3rd", name: "Aman OP", amount: "₹200", type: "WhatsApp", link: "https://whatsapp.com" }
+                ],
+                "6:00 PM": [
+                    { rank: "1st", name: "Deepak Boss", amount: "₹1000", type: "YouTube", link: "https://youtube.com" },
+                    { rank: "2nd", name: "Karan FF", amount: "₹600", type: "Instagram", link: "https://instagram.com" },
+                    { rank: "3rd", name: "Ravi YT", amount: "₹300", type: "Facebook", link: "https://facebook.com" }
+                ]
+            }
+        };
+
+        function toggleAdminMode() {
+            isAdmin = document.getElementById('admin-toggle').checked;
+            renderView(currentView);
+        }
+
+        function goHome() {
+            currentView = 'home';
+            document.getElementById('back-btn').classList.add('hidden');
+            renderView('home');
+        }
+
+        function navigateTo(view) {
+            currentView = view;
+            document.getElementById('back-btn').classList.remove('hidden');
+            renderView(view);
+        }
+
+        function switchDonorSlot(slot) {
+            activeDonorSlot = slot;
+            renderView('home');
+        }
+
+        function openNoticeModal() { document.getElementById('notice-modal').classList.remove('hidden'); }
+        function closeNoticeModal() { document.getElementById('notice-modal').classList.add('hidden'); }
+
+        function renderView(view) {
+            const container = document.getElementById('main-content');
+            
+            if (view === 'home') {
+                document.getElementById('back-btn').classList.add('hidden');
+                document.getElementById('page-title').innerText = "CASH FF ESPORTS";
+                
+                let slots = ["10:00 AM", "3:00 PM", "6:00 PM"];
+                let slotsTabsHTML = slots.map(s => {
+                    let isActive = activeDonorSlot === s;
+                    let tabClass = isActive ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold shadow-lg border-cyan-400' : 'bg-slate-900 text-slate-400 border-purple-900/60 hover:text-white';
+                    return `<button onclick="switchDonorSlot('${s}')" class="flex-1 py-1.5 rounded-lg text-xs border ${tabClass} transition">${s}</button>`;
+                }).join('');
+
+                let currentDonors = appData.donorSlots[activeDonorSlot] || [];
+                let donorsHTML = currentDonors.map((d) => `
+                    <div class="bg-slate-900/90 border border-purple-500/40 p-3 rounded-xl flex items-center justify-between shadow-md">
+                        <div class="space-y-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] bg-purple-950 border border-pink-500 text-pink-300 px-1.5 py-0.5 rounded font-bold">${d.rank}</span>
+                                <span class="text-sm font-extrabold text-white tracking-wide">${d.name}</span>
+                                <span class="text-[10px] bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold px-2 py-0.5 rounded-md shadow-sm">${d.amount}</span>
+                            </div>
+                            <div class="flex items-center space-x-2 pl-1">
+                                <span class="text-[9px] text-cyan-300 bg-cyan-950 px-1.5 py-0.5 rounded uppercase font-semibold border border-cyan-800">${d.type}</span>
+                                <a href="${d.link}" target="_blank" class="text-[11px] text-pink-400 hover:underline truncate max-w-[170px] block font-mono">${d.link}</a>
+                            </div>
+                        </div>
+                        <a href="${d.link}" target="_blank" class="gaming-btn text-white px-3 py-1.5 rounded-xl text-[11px] font-bold shadow-md">Visit</a>
+                    </div>
+                `).join('');
+
+                let editDonorBtn = isAdmin ? `<button onclick="openDonorModal()" class="text-[10px] bg-amber-600 hover:bg-amber-500 text-slate-950 font-extrabold px-2.5 py-1 rounded shadow">✏️ Edit</button>` : '';
+
+                container.innerHTML = `
+                    <div class="rgb-card p-3.5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center border-b border-purple-900/50 pb-2">
+                            <h2 class="text-xs font-bold text-pink-400 uppercase tracking-wider flex items-center space-x-1">
+                                <span>🔥 Top Army Supporters</span>
+                            </h2>
+                            <div class="flex items-center space-x-1.5">
+                                <button onclick="openNoticeModal()" class="text-[10px] bg-purple-900/80 hover:bg-purple-800 text-cyan-300 border border-cyan-500 font-bold px-2.5 py-1 rounded shadow">📢 Notice</button>
+                                ${editDonorBtn}
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-1.5 bg-slate-950 p-1 rounded-xl border border-purple-900/50">
+                            ${slotsTabsHTML}
+                        </div>
+
+                        <div class="space-y-2.5">
+                            ${donorsHTML}
+                        </div>
+                        
+                        <button onclick="alert('Redirecting to Donation Gateway / UPI...')" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider shadow-lg mt-1">
+                            ❤️ Support Now (Donate)
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 mt-3">
+                        <button onclick="navigateTo('g_rcode')" class="rgb-card w-full p-3.5 rounded-2xl text-left font-bold flex justify-between items-center transition group">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xl p-2 bg-purple-950/80 rounded-xl border border-purple-800">🎁</span>
+                                <div>
+                                    <span class="block text-white text-sm group-hover:text-pink-400 transition">G. RCODE</span>
+                                    <span class="text-[11px] text-slate-400 font-normal">Google Play Redeem Codes Hub</span>
+                                </div>
+                            </div>
+                            <span class="text-cyan-400 text-lg">&rarr;</span>
+                        </button>
+                        
+                        <button onclick="navigateTo('custom')" class="rgb-card w-full p-3.5 rounded-2xl text-left font-bold flex justify-between items-center transition group">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xl p-2 bg-purple-950/80 rounded-xl border border-purple-800">⚡</span>
+                                <div>
+                                    <span class="block text-white text-sm group-hover:text-pink-400 transition">CUSTAM</span>
+                                    <span class="text-[11px] text-slate-400 font-normal">Custom Room ID & 3-Min Blur Timer</span>
+                                </div>
+                            </div>
+                            <span class="text-cyan-400 text-lg">&rarr;</span>
+                        </button>
+
+                        <button onclick="navigateTo('nocapsun')" class="rgb-card w-full p-3.5 rounded-2xl text-left font-bold flex justify-between items-center opacity-60">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xl p-2 bg-slate-900 rounded-xl border border-slate-800">⏳</span>
+                                <div>
+                                    <span class="block text-white text-sm">NO Caption</span>
+                                    <span class="text-[11px] text-amber-400 font-normal">Coming Soon</span>
+                                </div>
+                            </div>
+                        </button>
+
+                        <button onclick="navigateTo('fourth_section')" class="rgb-card w-full p-3.5 rounded-2xl text-left font-bold flex justify-between items-center transition group">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xl p-2 bg-purple-950/80 rounded-xl border border-purple-800">🖼️</span>
+                                <div>
+                                    <span class="block text-white text-sm group-hover:text-pink-400 transition">TODAY PHOTO / BANNER</span>
+                                    <span class="text-[11px] text-slate-400 font-normal">Special Daily Post / Banner</span>
+                                </div>
+                            </div>
+                            <span class="text-cyan-400 text-lg">&rarr;</span>
+                        </button>
+                    </div>
+                `;
+            } 
+            else if (view === 'g_rcode') {
+                document.getElementById('page-title').innerText = "REDEEM CODES";
+                
+                let notifBarHTML = `
+                    <div class="rgb-card p-3 rounded-xl mb-3 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-base">🔔</span>
+                            <div>
+                                <span class="text-xs text-white font-bold block" id="rcode-notif-text">${redeemNotifEnabled ? 'Notification Active' : 'Notification Off'}</span>
+                                <span class="text-[10px] text-slate-400">नया कोड डलते ही तुरंत नोटिफाई किया जाएगा</span>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="redeem-toggle-switch" ${redeemNotifEnabled ? 'checked' : ''} onchange="toggleRedeemNotif()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+
+                let adminRcodeHTML = isAdmin ? `
+                    <div class="rgb-card p-4 rounded-2xl mb-4 space-y-2">
+                        <h3 class="text-xs font-bold text-pink-400 uppercase tracking-wider">Admin: Drop Redeem Codes</h3>
+                        <textarea id="bulk-codes" placeholder="Paste codes line by line..." class="w-full bg-slate-900 border border-purple-900 rounded-xl p-3 text-xs text-white h-24 focus:outline-none focus:border-pink-500"></textarea>
+                        <input type="text" id="rcode-time" placeholder="Schedule Time (e.g. 9:00 PM)" class="w-full bg-slate-900 border border-purple-900 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                        <button onclick="publishCodes()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Publish Codes</button>
+                    </div>
+                ` : '';
+
+                let deleteBtnHTML = isAdmin && appData.redeemCodes.length > 0 ? `
+                    <div class="flex justify-between items-center mb-3 px-1">
+                        <span class="text-xs text-slate-400">Total Codes: ${appData.redeemCodes.length}</span>
+                        <button onclick="appData.redeemCodes=[]; renderView('g_rcode');" class="text-red-400 text-xs font-semibold bg-red-950/50 border border-red-900 px-3 py-1 rounded-lg">All Delete</button>
+                    </div>
+                ` : '';
+
+                let listHTML = appData.redeemCodes.map((c, idx) => `
+                    <div class="rgb-card p-3.5 rounded-2xl mb-3 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] text-cyan-300 block mb-0.5 font-bold">#${idx+1} (${c.time})</span>
+                            <span class="font-mono font-bold text-white tracking-wider text-sm">${c.code}</span>
+                        </div>
+                        <button onclick="alert('Copied: ${c.code}')" class="gaming-btn text-white px-4 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider">Copy</button>
+                    </div>
+                `).join('');
+
+                container.innerHTML = `<div class="space-y-3">${notifBarHTML}${adminRcodeHTML}${deleteBtnHTML}${listHTML.length ? listHTML : '<p class="text-center text-xs text-slate-500 py-6">No codes available.</p>'}</div>`;
+            }
+            else if (view === 'custom') {
+                document.getElementById('page-title').innerText = "CUSTOM ROOMS";
+                
+                let notifBarHTML = `
+                    <div class="rgb-card p-3 rounded-xl mb-3 flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-base">⚡</span>
+                            <div>
+                                <span class="text-xs text-white font-bold block" id="custom-notif-text">${customNotifEnabled ? 'Notification Active' : 'Notification Off'}</span>
+                                <span class="text-[10px] text-slate-400">नया कस्टम मैच आते ही तुरंत नोटिफाई किया जाएगा</span>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="custom-toggle-switch" ${customNotifEnabled ? 'checked' : ''} onchange="toggleCustomNotif()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+
+                let adminAddHTML = isAdmin ? `
+                    <div class="rgb-card p-4 rounded-2xl mb-4 space-y-2.5">
+                        <h3 class="text-xs font-bold text-pink-400 uppercase tracking-wider">Admin: Add Custom Room</h3>
+                        <input type="text" id="new-id" placeholder="Room ID (e.g. 12457)" class="w-full bg-slate-900 border border-purple-900 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                        <input type="text" id="new-time" placeholder="Time Slot (e.g. 7:00 PM)" class="w-full bg-slate-900 border border-purple-900 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                        <button onclick="addNewRoom()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Publish Room (Start 3m Timer)</button>
+                    </div>
+                ` : '';
+
+                let deleteAllCustomHTML = isAdmin && appData.customMatches.length > 0 ? `
+                    <div class="flex justify-end mb-2">
+                        <button onclick="appData.customMatches=[]; renderView('custom');" class="text-red-400 text-xs font-semibold bg-red-950/50 border border-red-900 px-3 py-1 rounded-lg">Delete All Rooms</button>
+                    </div>
+                ` : '';
+
+                let listHTML = appData.customMatches.map((item, idx) => {
+                    let mins = Math.floor(item.timer / 60);
+                    let secs = item.timer % 60;
+                    let timeFormatted = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                    let deleteOneBtn = isAdmin ? `<button onclick="deleteCustomRoom(${idx})" class="text-red-400 hover:text-red-300 text-[10px] bg-red-950/50 border border-red-900 px-2 py-0.5 rounded">Delete</button>` : '';
+
+                    let rightButtonHTML = '';
+                    if (item.photos && item.photos.length > 0) {
+                        rightButtonHTML = `<button onclick="openPhotoModal(${idx})" class="gaming-btn text-white font-bold px-4 py-1.5 rounded-xl text-xs uppercase tracking-wider shadow-lg">C</button>`;
+                    } else {
+                        let copyBtnClass = item.active ? 'gaming-btn text-white font-bold cursor-pointer shadow-lg' : 'bg-purple-950/80 text-pink-400 border border-purple-800 font-mono font-bold';
+                        let copyBtnText = item.active ? 'COPY ID' : `⏳ ${timeFormatted}`;
+                        let copyAction = item.active ? `alert('Room ID Copied: ${item.id}')` : ``;
+                        rightButtonHTML = `
+                            <div class="flex items-center space-x-2">
+                                <button id="action-btn-${idx}" ${item.active ? '' : 'disabled'} onclick="${copyAction}" class="${copyBtnClass} px-3.5 py-1.5 rounded-xl text-xs uppercase tracking-wider">
+                                    ${copyBtnText}
+                                </button>
+                                ${isAdmin ? `<button onclick="openAdminPhotoModal(${idx})" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-2 py-1.5 rounded-xl text-[10px]">📷 C-Upload</button>` : ''}
+                            </div>
+                        `;
+                    }
+                    return `
+                        <div class="rgb-card p-4 rounded-2xl space-y-2.5 mb-3">
+                            <div class="flex justify-between text-xs text-slate-300 font-medium border-b border-purple-900/40 pb-2">
+                                <span class="text-cyan-300 font-bold">#${idx+1} | Pass: ${item.pass}</span>
+                                <div class="space-x-2 flex items-center"><span class="text-pink-400">Time: ${item.time}</span>${deleteOneBtn}</div>
+                            </div>
+                            <div class="flex justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-purple-900/50">
+                                <span class="font-mono text-sm font-extrabold text-white flex items-center space-x-2">
+                                    <span>ID:</span>
+                                    <span id="id-box-${idx}" class="relative px-2 py-0.5 rounded text-purple-300 ${item.active ? '' : 'blur-sm select-none bg-purple-950'}">${item.id}</span>
+                                </span>
+                                <div>${rightButtonHTML}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.innerHTML = `<div class="space-y-2">${notifBarHTML}${adminAddHTML}${deleteAllCustomHTML}${listHTML.length ? listHTML : '<p class="text-center text-xs text-slate-500 py-6">No custom rooms active.</p>'}</div>`;
+                startGlobalTimer();
+            }
+            else if (view === 'fourth_section') {
+                document.getElementById('page-title').innerText = "TODAY PHOTO / BANNER";
+                let adminPhotoUpload = isAdmin ? `
+                    <div class="rgb-card p-4 rounded-2xl space-y-3">
+                        <h3 class="text-xs font-bold text-pink-400 uppercase tracking-wider">Admin: Upload Daily Banner</h3>
+                        <input type="file" id="photo-input" accept="image/*" class="w-full text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white cursor-pointer">
+                        <button onclick="saveFourthPhoto()" class="gaming-btn w-full text-white font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Upload & Save Banner</button>
+                    </div>
+                ` : '';
+                let photoDisplay = appData.fourthSectionImage ? `
+                    <div class="rgb-card p-3.5 rounded-2xl text-center space-y-2">
+                        <span class="text-xs text-cyan-300 font-bold block">Today's Special Banner:</span>
+                        <img src="${appData.fourthSectionImage}" class="w-full rounded-xl border border-purple-900 object-cover max-h-72 shadow-lg">
+                        ${isAdmin ? '<button onclick="appData.fourthSectionImage=null; renderView(\'fourth_section\');" class="text-red-400 text-xs font-semibold bg-red-950/50 border border-red-900 px-3 py-1 rounded-lg mt-2">Delete Banner</button>' : ''}
+                    </div>
+                ` : `<div class="rgb-card p-8 rounded-2xl text-center text-slate-400 text-xs">No special banner uploaded yet.</div>`;
+                container.innerHTML = `<div class="space-y-4">${adminPhotoUpload}${photoDisplay}</div>`;
+            }
+        }
+
+        function toggleRedeemNotif() {
+            redeemNotifEnabled = document.getElementById('redeem-toggle-switch').checked;
+            let txt = document.getElementById('rcode-notif-text');
+            if (redeemNotifEnabled) {
+                txt.innerText = "Notification Active";
+                alert("🔔 रिडीम कोड नोटिफिकेशन ऑन कर दी गई है!");
+            } else {
+                txt.innerText = "Notification Off";
+                alert("🔕 रिडीम कोड नोटिफिकेशन बंद कर दी गई है!");
+            }
+        }
+
+        function toggleCustomNotif() {
+            customNotifEnabled = document.getElementById('custom-toggle-switch').checked;
+            let txt = document.getElementById('custom-notif-text');
+            if (customNotifEnabled) {
+                txt.innerText = "Notification Active";
+                alert("⚡ कस्टम मैच नोटिफिकेशन ऑन कर दी गई है!");
+            } else {
+                txt.innerText = "Notification Off";
+                alert("🔕 कस्टम मैच नोटिफिकेशन बंद कर दी गई है!");
+            }
+        }
+
+        function openDonorModal() {
+            document.getElementById('edit-slot-select').value = activeDonorSlot;
+            loadSlotDataToModal();
+            document.getElementById('admin-donor-modal').classList.remove('hidden');
+        }
+
+        function loadSlotDataToModal() {
+            let selectedSlot = document.getElementById('edit-slot-select').value;
+            let container = document.getElementById('donor-inputs-container');
+            container.innerHTML = '';
+            let donors = appData.donorSlots[selectedSlot] || [];
+            
+            donors.forEach((d, i) => {
+                container.innerHTML += `
+                    <div class="space-y-2 bg-slate-900 p-3 rounded-xl border border-purple-900">
+                        <span class="text-xs font-bold text-pink-400 block">${d.rank} Supporter</span>
+                        <input type="text" id="d-name-${i}" value="${d.name}" placeholder="Name" class="w-full bg-slate-950 border border-purple-900 rounded-lg p-2 text-xs text-white">
+                        <div class="flex space-x-2">
+                            <input type="text" id="d-amount-${i}" value="${d.amount}" placeholder="Amount (e.g. ₹500)" class="w-1/2 bg-slate-950 border border-purple-900 rounded-lg p-2 text-xs text-white">
+                            <input type="text" id="d-type-${i}" value="${d.type}" placeholder="Type (e.g. YouTube)" class="w-1/2 bg-slate-950 border border-purple-900 rounded-lg p-2 text-xs text-white">
+                        </div>
+                        <input type="text" id="d-link-${i}" value="${d.link}" placeholder="URL Link" class="w-full bg-slate-950 border border-purple-900 rounded-lg p-2 text-xs text-white">
+                    </div>
+                `;
+            });
+        }
+
+        function closeDonorModal() { document.getElementById('admin-donor-modal').classList.add('hidden'); }
+
+        function saveDonorsData() {
+            let selectedSlot = document.getElementById('edit-slot-select').value;
+            let updatedList = [];
+            for(let i=0; i<3; i++) {
+                let name = document.getElementById(`d-name-${i}`).value;
+                let amount = document.getElementById(`d-amount-${i}`).value;
+                let type = document.getElementById(`d-type-${i}`).value;
+                let link = document.getElementById(`d-link-${i}`).value;
+                updatedList.push({
+                    rank: i === 0 ? "1st" : (i === 1 ? "2nd" : "3rd"),
+                    name: name || "Gamer",
+                    amount: amount || "₹100",
+                    type: type || "YouTube",
+                    link: link || "#"
+                });
+            }
+            appData.donorSlots[selectedSlot] = updatedList;
+            activeDonorSlot = selectedSlot;
+            closeDonorModal();
+            renderView('home');
+            alert(`Top Supporters for ${selectedSlot} Updated Successfully!`);
+        }
+
+        function publishCodes() {
+            let text = document.getElementById('bulk-codes').value;
+            let time = document.getElementById('rcode-time').value || "9:00 PM";
+            if(text.trim()) {
+                text.split('\n').forEach(line => {
+                    if(line.trim()) appData.redeemCodes.push({ code: line.trim(), time: time });
+                });
+                renderView('g_rcode');
+                if(redeemNotifEnabled) alert("🔔 Notification Sent: नया रिडीम कोड पब्लिश हो गया है!");
+            } else { alert('कृपया कोड दर्ज करें!'); }
+        }
+
+        function addNewRoom() {
+            let id = document.getElementById('new-id').value;
+            let time = document.getElementById('new-time').value;
+            if(id && time) {
+                appData.customMatches.push({ id: id, pass: "111", time: time, timer: 180, active: false, photos: [] });
+                renderView('custom');
+                if(customNotifEnabled) alert("⚡ Notification Sent: नया कस्टम रूम लाइव कर दिया गया है!");
+            } else { alert('कृपया आईडी और समय भरें!'); }
+        }
+
+        function deleteCustomRoom(index) {
+            appData.customMatches.splice(index, 1);
+            renderView('custom');
+        }
+
+        function openAdminPhotoModal(index) {
+            activeMatchIndex = index;
+            document.getElementById('admin-photo-modal').classList.remove('hidden');
+        }
+        function closeAdminPhotoModal() { document.getElementById('admin-photo-modal').classList.add('hidden'); }
+
+        function saveMatchPhotos() {
+            let f1 = document.getElementById('p1').files[0];
+            let f2 = document.getElementById('p2').files[0];
+            let f3 = document.getElementById('p3').files[0];
+            if(f1 && f2 && f3) {
+                let loaded = 0, arr = [];
+                [f1, f2, f3].forEach((f, i) => {
+                    let r = new FileReader();
+                    r.onload = e => {
+                        arr[i] = e.target.result;
+                        loaded++;
+                        if(loaded === 3) {
+                            appData.customMatches[activeMatchIndex].photos = arr;
+                            closeAdminPhotoModal();
+                            renderView('custom');
+                            alert('Photos Uploaded Successfully!');
+                        }
+                    };
+                    r.readAsDataURL(f);
+                });
+            } else { alert('कृपया तीनों विनर्स की फोटो चुनें!'); }
+        }
+
+        function openPhotoModal(index) {
+            let match = appData.customMatches[index];
+            let container = document.getElementById('modal-photos-container');
+            container.innerHTML = '';
+            let titles = ["1st Place Winner", "2nd Place Winner", "3rd Place Winner"];
+            match.photos.forEach((src, idx) => {
+                container.innerHTML += `<div class="space-y-1"><span class="text-[11px] text-pink-400 font-bold block">${titles[idx]}</span><img src="${src}" class="w-full rounded-xl border border-purple-900 object-cover max-h-48 shadow-md"></div>`;
+            });
+            document.getElementById('photo-modal').classList.remove('hidden');
+        }
+        function closePhotoModal() { document.getElementById('photo-modal').classList.add('hidden'); }
+
+        function saveFourthPhoto() {
+            let file = document.getElementById('photo-input').files[0];
+            if(file) {
+                let r = new FileReader();
+                r.onload = e => {
+                    appData.fourthSectionImage = e.target.result;
+                    renderView('fourth_section');
+                    alert('Banner Uploaded Successfully!');
+                };
+                r.readAsDataURL(file);
+            } else { alert('कृपया फोटो चुनें!'); }
+        }
+
+        let globalInterval = null;
+        function startGlobalTimer() {
+            if(globalInterval) clearInterval(globalInterval);
+            globalInterval = setInterval(() => {
+                appData.customMatches.forEach((item, idx) => {
+                    if (!item.photos || item.photos.length === 0) {
+                        if (item.timer > 0) {
+                            item.timer--;
+                            let btn = document.getElementById(`action-btn-${idx}`);
+                            if(btn) {
+                                let m = Math.floor(item.timer / 60);
+                                let s = item.timer % 60;
+                                btn.innerText = `⏳ ${m}:${s < 10 ? '0' : ''}${s}`;
+                            }
+                        } else if (!item.active) {
+                            item.active = true;
+                            let box = document.getElementById(`id-box-${idx}`);
+                            let btn = document.getElementById(`action-btn-${idx}`);
+                            if(box && btn) {
+                                box.classList.remove('blur-sm', 'select-none', 'bg-purple-950');
+                                btn.className = "gaming-btn text-white font-bold px-4 py-1.5 rounded-xl text-xs cursor-pointer shadow-lg uppercase tracking-wider";
+                                btn.innerText = "COPY ID";
+                                btn.onclick = () => alert('Room ID Copied: ' + item.id);
+                            }
+                        }
+                    }
+                });
+            }, 1000);
+        }
+
+        renderView('home');
+    </script>
+</body>
+</html>

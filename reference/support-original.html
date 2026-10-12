@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Gaming Donation Support</title>
+    <style>
+        @keyframes rgbGlow {
+            0% { border-color: #ff0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+            33% { border-color: #00ffff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4); }
+            66% { border-color: #00ff55; box-shadow: 0 0 15px rgba(0, 255, 85, 0.4); }
+            100% { border-color: #ff0055; box-shadow: 0 0 15px rgba(255, 0, 85, 0.4); }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0f19;
+            color: #f8fafc;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: #131b2e;
+            padding: 25px;
+            border-radius: 16px;
+            border: 2px solid #ff0055;
+            animation: rgbGlow 6s infinite;
+        }
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 15px;
+        }
+        h2 { margin: 0; color: #00ffff; font-size: 24px; text-shadow: 0 0 10px rgba(0,255,255,0.3); }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff0055, #7928ca);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(255,0,85,0.4);
+        }
+        .btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .secondary-btn { background: linear-gradient(45deg, #0072ff, #00c6ff); box-shadow: 0 0 10px rgba(0,114,255,0.4); }
+        .delete-btn { background: linear-gradient(45deg, #ef4444, #dc2626); padding: 6px 10px; font-size: 12px; box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+        .hidden { display: none; }
+
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; font-size: 14px; color: #cbd5e1; }
+        input[type="text"], input[type="number"], input[type="file"], select, input[type="datetime-local"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background: #1e293b;
+            color: #fff;
+        }
+        .checkbox-row { display: flex; align-items: center; gap: 10px; }
+        .checkbox-row input { width: auto; }
+
+        /* QR Box */
+        .qr-box {
+            text-align: center;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px dashed #00ffff;
+        }
+        .qr-preview {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 2px solid #ff0055;
+            background: #fff;
+            transition: 0.2s;
+        }
+        .qr-preview:hover { transform: scale(1.08); }
+
+        /* Filter bar */
+        .filter-bar {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            border: 1px solid #334155;
+        }
+        .filter-full { grid-column: span 2; }
+
+        /* Donor Card List */
+        .donor-list { display: flex; flex-direction: column; gap: 12px; }
+        .donor-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .donor-card:hover { border-color: #00ffff; }
+        .donor-info { display: flex; flex-direction: column; gap: 4px; }
+        .donor-phone { font-size: 16px; font-weight: bold; color: #f1f5f9; }
+        .donor-amount { font-size: 16px; color: #00ff55; font-weight: bold; text-shadow: 0 0 5px rgba(0,255,85,0.3); }
+        .donor-time { font-size: 12px; color: #94a3b8; }
+        
+        .action-btns {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .see-screenshot-btn {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 0 8px rgba(245,158,11,0.4);
+        }
+        .see-screenshot-btn:hover { opacity: 0.9; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #131b2e;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+        }
+        .modal-content img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #334155;
+        }
+        .close-modal {
+            position: absolute;
+            right: 15px; top: 10px;
+            font-size: 26px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #ff0055;
+        }
+        .empty-msg { text-align: center; color: #94a3b8; padding: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Top Navigation -->
+    <div class="header-nav">
+        <h2 id="pageTitle">🔥 Gaming Donation Support</h2>
+        <button class="btn secondary-btn" id="navBtn" onclick="toggleView()">📊 Open Dashboard (10 Demos)</button>
+    </div>
+
+    <!-- Section 1: Donation Form -->
+    <div id="formSection">
+        <!-- QR Box -->
+        <div class="qr-box">
+            <p style="margin: 0 0 8px 0; font-size: 13px; color: #00ffff;"><strong>Scan to Pay (Click QR to Enlarge):</strong></p>
+            <div id="qrDisplayArea">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DemoUPIPayment" class="qr-preview" onclick="openSingleImage(this.src, 'Merchant QR Code')" title="Click to enlarge">
+            </div>
+        </div>
+
+        <form id="donationForm" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label>1. Enter WhatsApp Number</label>
+                <input type="text" id="whatsapp" placeholder="e.g. 9876543210" required pattern="[0-9]{10}">
+            </div>
+
+            <div class="form-group">
+                <label>2. Enter Amount (₹)</label>
+                <input type="number" id="amount" placeholder="e.g. 50 or 100" required min="1">
+            </div>
+
+            <div class="form-group qr-box" style="text-align: left; padding: 12px; border-style: solid;">
+                <label>3. Upload Payment Screenshot</label>
+                <input type="file" id="screenshot" accept="image/*" required>
+            </div>
+
+            <div class="form-group checkbox-row">
+                <input type="checkbox" id="agree" required>
+                <label for="agree" style="margin-bottom:0; font-weight:normal; cursor:pointer; color:#f1f5f9;">I agree that this donation is non-refundable.</label>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%;">🚀 Share / Submit Donation</button>
+        </form>
+    </div>
+
+    <!-- Section 2: Dashboard & List View -->
+    <div id="dashboardSection" class="hidden">
+        
+        <!-- Admin QR Upload Panel -->
+        <div style="background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #00ffff;">
+            <label style="font-size: 13px; color: #00ffff; font-weight: bold;">⚙️ Admin Panel: Update Merchant QR Code</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <input type="file" id="adminQrInput" accept="image/*" style="font-size: 12px; padding: 6px;">
+                <button class="btn" style="padding: 6px 14px; font-size: 13px;" onclick="saveAdminQr()">Save QR</button>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div>
+                <label style="font-size: 12px;">Start Time:</label>
+                <input type="datetime-local" id="startTime" onchange="renderDashboard()">
+            </div>
+            <div>
+                <label style="font-size: 12px;">End Time:</label>
+                <input type="datetime-local" id="endTime" onchange="renderDashboard()">
+            </div>
+            <div class="filter-full" style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                <div>
+                    <label style="font-size: 12px; display:inline; margin-right: 8px;">Sort By:</label>
+                    <select id="sortBy" onchange="renderDashboard()" style="width: auto; padding: 6px; display:inline-block;">
+                        <option value="latest">Latest First</option>
+                        <option value="highToLow">High to Low Amount</option>
+                        <option value="lowToHigh">Low to High Amount</option>
+                    </select>
+                </div>
+                <button class="btn secondary-btn" style="padding: 6px 12px; font-size: 12px;" onclick="resetFilters()">Clear Filters</button>
+            </div>
+        </div>
+
+        <!-- Cards List -->
+        <div id="donorListContainer" class="donor-list"></div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h3 id="modalTitle" style="margin: 0 0 10px 0; font-size: 16px; color: #00ffff;">Payment Screenshot</h3>
+        <div id="modalImagesContainer"></div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        loadHomeQr();
+        initDemoDataIfNeeded();
+    };
+
+    function initDemoDataIfNeeded() {
+        if (!localStorage.getItem('donationsList')) {
+            const sampleImage = "https://via.placeholder.com/300x500.png?text=Valid+Payment+Screenshot";
+            const demoSubmissions = [];
+            
+            for (let i = 1; i <= 10; i++) {
+                let phone = `98765432${i < 10 ? '0' + i : i}`;
+                let amount = i * 20;
+                let now = new Date();
+                now.setMinutes(now.getMinutes() - (11 - i) * 15);
+                
+                demoSubmissions.push({
+                    whatsapp: phone,
+                    amount: amount,
+                    screenshots: [sampleImage],
+                    rawTime: now.toISOString(),
+                    timestamp: now.toLocaleString()
+                });
+            }
+            localStorage.setItem('donationsList', JSON.stringify(demoSubmissions));
+        }
+    }
+
+    function toggleView() {
+        const formSec = document.getElementById('formSection');
+        const dashSec = document.getElementById('dashboardSection');
+        const navBtn = document.getElementById('navBtn');
+        const pageTitle = document.getElementById('pageTitle');
+
+        if (formSec.classList.contains('hidden')) {
+            formSec.classList.remove('hidden');
+            dashSec.classList.add('hidden');
+            navBtn.innerText = "📊 Open Dashboard (10 Demos)";
+            navBtn.className = "btn secondary-btn";
+            pageTitle.innerText = "🔥 Gaming Donation Support";
+            loadHomeQr();
+        } else {
+            formSec.classList.add('hidden');
+            dashSec.classList.remove('hidden');
+            navBtn.innerText = "🏠 Back to Form";
+            navBtn.className = "btn";
+            pageTitle.innerText = "📈 Live Donation Dashboard";
+            renderDashboard();
+        }
+    }
+
+    function saveAdminQr() {
+        const fileInput = document.getElementById('adminQrInput');
+        if (fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('adminQrImage', e.target.result);
+                alert('QR code updated successfully!');
+                fileInput.value = '';
+                loadHomeQr();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            alert('Please select a QR image first.');
+        }
+    }
+
+    function loadHomeQr() {
+        const qrArea = document.getElementById('qrDisplayArea');
+        const savedQr = localStorage.getItem('adminQrImage');
+        if (savedQr) {
+            qrArea.innerHTML = `<img src="${savedQr}" class="qr-preview" onclick="openSingleImage(this.src, 'Merchant QR Code')" title="Click to enlarge">`;
+        }
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const whatsapp = document.getElementById('whatsapp').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        const fileInput = document.getElementById('screenshot');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64Image = e.target.result;
+            let submissions = JSON.parse(localStorage.getItem('donationsList')) || [];
+            let existingUser = submissions.find(item => item.whatsapp === whatsapp);
+
+            const now = new Date();
+            const isoString = now.toISOString();
+            const formattedTime = now.toLocaleString();
+
+            if (existingUser) {
+                existingUser.amount += amount;
+                if (!Array.isArray(existingUser.screenshots)) {
+                    existingUser.screenshots = [existingUser.screenshot];
+                }
+                existingUser.screenshots.push(base64Image);
+                existingUser.rawTime = isoString;
+                existingUser.timestamp = formattedTime;
+            } else {
+                submissions.push({
+                    whatsapp: whatsapp,
+                    amount: amount,
+                    screenshots: [base64Image],
+                    rawTime: isoString,
+                    timestamp: formattedTime
+                });
+            }
+
+            localStorage.setItem('donationsList', JSON.stringify(submissions));
+            alert('Donation shared successfully!');
+            document.getElementById('donationForm').reset();
+            toggleView();
+        };
+
+        if (fileInput.files[0]) {
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function renderDashboard() {
+        const container = document.getElementById('donorListContainer');
+        container.innerHTML = '';
+
+        let submissions = JSON.parse(localStorage.getItem('donationsList')) || [];
+        if (submissions.length === 0) {
+            container.innerHTML = `<div class="empty-msg">No donations received yet.</div>`;
+            return;
+        }
+
+        let startTime = document.getElementById('startTime').value;
+        let endTime = document.getElementById('endTime').value;
+
+        let filtered = submissions.filter(item => {
+            let itemTime = item.rawTime;
+            if (startTime && itemTime < new Date(startTime).toISOString()) return false;
+            if (endTime && itemTime > new Date(endTime).toISOString()) return false;
+            return true;
+        });
+
+        let sortBy = document.getElementById('sortBy').value;
+        if (sortBy === 'highToLow') filtered.sort((a, b) => b.amount - a.amount);
+        else if (sortBy === 'lowToHigh') filtered.sort((a, b) => a.amount - b.amount);
+        else filtered.reverse();
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-msg">No data found in this time range.</div>`;
+            return;
+        }
+
+        filtered.forEach((item, index) => {
+            let card = document.createElement('div');
+            card.className = 'donor-card';
+
+            let shots = Array.isArray(item.screenshots) ? item.screenshots : [item.screenshot];
+            let encodedShots = encodeURIComponent(JSON.stringify(shots));
+
+            card.innerHTML = `
+                <div class="donor-info">
+                    <span class="donor-phone">📱 ${item.whatsapp}</span>
+                    <span class="donor-amount">₹${item.amount}</span>
+                    <span class="donor-time">🕒 ${item.timestamp}</span>
+                </div>
+                <div class="action-btns">
+                    <button class="see-screenshot-btn" onclick="openScreenshots('${encodedShots}', '${item.whatsapp}')">
+                        📷 View (${shots.length})
+                    </button>
+                    <button class="btn delete-btn" onclick="deletePost('${item.whatsapp}')" title="Delete fraudulent post">
+                        🗑️ Delete
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Delete a specific submission/post
+    function deletePost(whatsappNumber) {
+        if (confirm(`Are you sure you want to delete the entry for WhatsApp: ${whatsappNumber}?`)) {
+            let submissions = JSON.parse(localStorage.getItem('donationsList')) || [];
+            submissions = submissions.filter(item => item.whatsapp !== whatsappNumber);
+            localStorage.setItem('donationsList', JSON.stringify(submissions));
+            renderDashboard();
+        }
+    }
+
+    function openScreenshots(encodedShots, phone) {
+        let shots = JSON.parse(decodeURIComponent(encodedShots));
+        document.getElementById('modalTitle').innerText = `WhatsApp: ${phone} (${shots.length} Screenshot(s))`;
+        
+        let container = document.getElementById('modalImagesContainer');
+        container.innerHTML = '';
+
+        shots.forEach((imgSrc, index) => {
+            let img = document.createElement('img');
+            img.src = imgSrc;
+            img.style.marginBottom = index < shots.length - 1 ? "15px" : "0";
+            container.appendChild(img);
+        });
+
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function openSingleImage(imgSrc, titleText) {
+        document.getElementById('modalTitle').innerText = titleText;
+        let container = document.getElementById('modalImagesContainer');
+        container.innerHTML = `<img src="${imgSrc}">`;
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    function resetFilters() {
+        document.getElementById('startTime').value = '';
+        document.getElementById('endTime').value = '';
+        document.getElementById('sortBy').value = 'latest';
+        renderDashboard();
+    }
+</script>
+
+</body>
+</html>
