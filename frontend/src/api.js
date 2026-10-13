@@ -1,4 +1,12 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081').replace(/\/$/, '');
+
+export class ApiError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
 
 export async function api(path, options = {}) {
   const token = localStorage.getItem('cashff_token');
@@ -19,7 +27,10 @@ export async function api(path, options = {}) {
       localStorage.removeItem('cashff_username');
       window.dispatchEvent(new Event('cashff-auth-expired'));
     }
-    throw new Error(data?.message || data?.error || (typeof data === 'string' ? data : `Request failed (${response.status})`));
+    const message = typeof data === 'string'
+      ? data.trim()
+      : data?.message || data?.error || data?.detail || data?.title;
+    throw new ApiError(message || `Request failed with HTTP ${response.status}.`, response.status);
   }
   return data;
 }

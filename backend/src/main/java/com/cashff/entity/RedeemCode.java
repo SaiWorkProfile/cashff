@@ -20,6 +20,9 @@ public class RedeemCode {
     @Column(nullable = false, length = 255)
     private String code;
 
+    @Column(name = "scheduled_time", nullable = false, length = 80)
+    private String scheduledTime;
+
     @Column(nullable = true)
     private Instant startAt;
 
@@ -36,6 +39,7 @@ public class RedeemCode {
         this.code = code;
         this.startAt = startAt;
         this.endAt = endAt;
+        this.scheduledTime = formatScheduledTime(startAt, endAt);
         this.createdAt = Instant.now();
     }
 
@@ -43,6 +47,7 @@ public class RedeemCode {
         this.code = code;
         this.startAt = null;
         this.endAt = null;
+        this.scheduledTime = scheduledTime == null ? "" : scheduledTime;
         this.createdAt = Instant.now();
     }
 
@@ -68,6 +73,7 @@ public class RedeemCode {
 
     public void setStartAt(Instant startAt) {
         this.startAt = startAt;
+        this.scheduledTime = formatScheduledTime(this.startAt, this.endAt);
     }
 
     public Instant getEndAt() {
@@ -76,24 +82,30 @@ public class RedeemCode {
 
     public void setEndAt(Instant endAt) {
         this.endAt = endAt;
+        this.scheduledTime = formatScheduledTime(this.startAt, this.endAt);
     }
 
     public String getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(String scheduledTime) {
+        this.scheduledTime = scheduledTime == null ? "" : scheduledTime;
+        this.startAt = null;
+        this.endAt = null;
+    }
+
+    private static String formatScheduledTime(Instant startAt, Instant endAt) {
         if (startAt == null && endAt == null) {
             return "";
         }
         if (startAt == null) {
-            return endAt == null ? "" : endAt.toString();
+            return endAt.toString();
         }
         if (endAt == null) {
             return startAt.toString();
         }
         return startAt + " -> " + endAt;
-    }
-
-    public void setScheduledTime(String scheduledTime) {
-        this.startAt = null;
-        this.endAt = null;
     }
 
     public Instant getCreatedAt() {

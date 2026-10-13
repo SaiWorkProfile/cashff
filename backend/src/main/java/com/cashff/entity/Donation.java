@@ -87,14 +87,27 @@ public class Donation {
             }
         }
 
-        this.screenshots.clear();
+        this.screenshots.removeIf(screenshot -> !replacement.contains(screenshot));
         for (DonationScreenshot screenshot : replacement) {
-            addScreenshot(screenshot);
+            if (screenshot == null) {
+                continue;
+            }
+            if (screenshot.getDonation() != this) {
+                screenshot.setDonation(this);
+            } else if (!this.screenshots.contains(screenshot)) {
+                this.screenshots.add(screenshot);
+            }
         }
     }
 
     public void addScreenshot(DonationScreenshot screenshot) {
         Objects.requireNonNull(screenshot, "screenshot");
+        if (screenshot.getDonation() == this) {
+            if (!this.screenshots.contains(screenshot)) {
+                this.screenshots.add(screenshot);
+            }
+            return;
+        }
         screenshot.setDonation(this);
     }
 }

@@ -32,6 +32,12 @@ public class CustomRoom {
     @Column(nullable = false)
     private Instant unlockAt;
 
+    @Column(name = "start_at")
+    private Instant startAt;
+
+    @Column(name = "end_at")
+    private Instant endAt;
+
     @Column(length = 500)
     private String firstPhoto;
 
@@ -50,6 +56,16 @@ public class CustomRoom {
         this.slotTime = slotTime;
         this.publishedAt = Instant.now();
         this.unlockAt = this.publishedAt.plusSeconds(180);
+    }
+
+    public CustomRoom(String roomCode, String passwordCode, Instant startAt, Instant endAt, Instant publishedAt) {
+        this.roomCode = roomCode;
+        this.passwordCode = passwordCode;
+        this.slotTime = "";
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.publishedAt = publishedAt;
+        this.unlockAt = startAt.plusSeconds(180);
     }
 
     public Long getId() {
@@ -98,6 +114,22 @@ public class CustomRoom {
 
     public void setUnlockAt(Instant unlockAt) {
         this.unlockAt = unlockAt;
+    }
+
+    public Instant getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Instant startAt) {
+        this.startAt = startAt;
+    }
+
+    public Instant getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Instant endAt) {
+        this.endAt = endAt;
     }
 
     public String getFirstPhoto() {

@@ -73,8 +73,9 @@ public class DonationScreenshot {
             return;
         }
 
-        if (this.donation != null) {
-            this.donation.getScreenshots().remove(this);
+        Donation previousDonation = this.donation;
+        if (previousDonation != null) {
+            previousDonation.getScreenshots().remove(this);
         }
 
         this.donation = donation;
